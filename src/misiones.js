@@ -183,5 +183,37 @@ export function buscarPedidos(pedidos, texto) {
 // Orden: total de mayor a menor; si empatan, por nombre alfabético.
 // Pista: un objeto acumulador, luego Object.entries, map y sort.
 export function topClientes(pedidos, n) {
-  return [] // TODO
+  if (!Array.isArray(pedidos) || pedidos.length === 0 || !n) {
+    return [];
+  }
+
+  // 1. Objeto acumulador para sumar el total por cada cliente
+  const acumulado = {};
+
+  pedidos.forEach((pedido) => {
+    const cliente = pedido.cliente;
+    const totalDelPedido = totalPedido(pedido); // Reutilizamos totalPedido
+
+    if (!acumulado[cliente]) {
+      acumulado[cliente] = 0;
+    }
+    acumulado[cliente] += totalDelPedido;
+  });
+
+  // 2. Convertir a arreglo con Object.entries y mapear al formato requerido
+  const listaClientes = Object.entries(acumulado).map(([cliente, total]) => ({
+    cliente,
+    total: Math.round(total * 100) / 100 // Redondear por seguridad
+  }));
+
+  // 3. Ordenar: de mayor a menor total; si empatan, por orden alfabético del cliente
+  listaClientes.sort((a, b) => {
+    if (b.total !== a.total) {
+      return b.total - a.total; // Mayor a menor
+    }
+    return a.cliente.localeCompare(b.cliente); // Alfabético en caso de empate
+  });
+
+  // 4. Devolver solo los primeros `n` clientes
+  return listaClientes.slice(0, n);
 }
