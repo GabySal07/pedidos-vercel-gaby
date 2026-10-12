@@ -14,6 +14,7 @@
 // ============================================================================
 
 import { ESTADOS } from './datos.js'
+
 export function totalPedido(pedido) {
   if (!pedido || !pedido.items || pedido.items.length === 0) {
     return 0;
@@ -32,9 +33,6 @@ export function totalPedido(pedido) {
 
   // 4. Redondear a 2 decimales para evitar problemas de precisión en JS
   return Math.round(total * 100) / 100;
-}
-export function totalPedido(pedido) {
-  return 0 // TODO
 }
 
 // ----------------------------------------------------------------------------
