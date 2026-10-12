@@ -15,23 +15,33 @@
 
 import { ESTADOS } from './datos.js'
 
+// ----------------------------------------------------------------------------
+// MISIÓN 1 · RF3 — ¿Cuánto paga el cliente?
+// ----------------------------------------------------------------------------
+// Recibe un pedido: { items: [{ cantidad, precioUnitario }], descuento }
+//   - subtotal = suma de (cantidad × precioUnitario) de cada item
+//   - descuento es una fracción (0.1 = 10 %). Si no viene, es 0.
+//   - total = subtotal × (1 − descuento), REDONDEADO a 2 decimales.
+//   - Un pedido sin items cuesta 0.
+// Pista: prueba en la consola 0.1 + 0.2 y verás por qué hay que redondear.
+//        Math.round(x * 100) / 100
 export function totalPedido(pedido) {
   if (!pedido || !pedido.items || pedido.items.length === 0) {
     return 0;
   }
 
-  // 1. Sumar el subtotal de (cantidad * precioUnitario) de cada ítem
-  const subtotal = pedido.items.reduce((acc, item) => {
-    return acc + (item.cantidad * item.precioUnitario);
+  // 1. Calcular el subtotal sumando (cantidad * precioUnitario) de cada ítem
+  const subtotal = pedido.items.reduce((acumulado, item) => {
+    return acumulado + (item.cantidad * item.precioUnitario);
   }, 0);
 
-  // 2. Obtener el descuento (si no viene, se asume 0)
+  // 2. Obtener el descuento (si no está definido o es falsy, se asume 0)
   const descuento = pedido.descuento || 0;
 
   // 3. Calcular el total aplicando el descuento
   const total = subtotal * (1 - descuento);
 
-  // 4. Redondear a 2 decimales para evitar problemas de precisión en JS
+  // 4. Redondear estrictamente a 2 decimales usando la pista indicada
   return Math.round(total * 100) / 100;
 }
 
