@@ -118,7 +118,25 @@ export function validarCliente(cliente) {
 //   { registrado: 3, en_preparacion: 3, listo: 2, entregado: 2 }
 // Con una lista vacía, todos van en 0.
 export function resumenPorEstado(pedidos) {
-  return {} // TODO
+  // Inicializamos un objeto con todos los estados en 0
+  const resumen = {};
+  ESTADOS.forEach((estado) => {
+    resumen[estado] = 0;
+  });
+
+  // Si no hay pedidos o no es un arreglo válido, devolvemos el objeto con ceros
+  if (!Array.isArray(pedidos)) {
+    return resumen;
+  }
+
+  // Contamos cada pedido según su estado actual
+  pedidos.forEach((pedido) => {
+    if (resumen.hasOwnProperty(pedido.estado)) {
+      resumen[pedido.estado] += 1;
+    }
+  });
+
+  return resumen;
 }
 
 // ----------------------------------------------------------------------------
