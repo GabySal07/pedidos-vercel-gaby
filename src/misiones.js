@@ -80,7 +80,35 @@ export function puedeTransicionar(actual, nuevo) {
 //                         correo: algo@algo.algo   (el email es opcional)
 // Pista: '55 1234-5678'.replace(/[\s-]/g, '')   y   /^\d{10}$/.test(...)
 export function validarCliente(cliente) {
-  return [] // TODO
+  const errores = [];
+
+  // 1. Validar nombre: requerido o solo espacios
+  if (!cliente || !cliente.nombre || cliente.nombre.trim() === '') {
+    errores.push('nombre_requerido');
+  }
+
+  // 2. Validar teléfono: quitar espacios y guiones, debe tener exactamente 10 dígitos
+  if (!cliente || !cliente.telefono) {
+    errores.push('telefono_invalido');
+  } else {
+    // Reemplazamos todos los espacios y guiones globales
+    const telLimpio = cliente.telefono.replace(/[\s-]/g, '');
+    // Verificamos que sean exactamente 10 dígitos numéricos
+    if (!/^\d{10}$/.test(telLimpio)) {
+      errores.push('telefono_invalido');
+    }
+  }
+
+  // 3. Validar email: si viene (no está vacío), debe tener formato válido
+  if (cliente && cliente.email && cliente.email.trim() !== '') {
+    // Expresión regular básica para validar correo
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailValido.test(cliente.email)) {
+      errores.push('email_invalido');
+    }
+  }
+
+  return errores;
 }
 
 // ----------------------------------------------------------------------------
